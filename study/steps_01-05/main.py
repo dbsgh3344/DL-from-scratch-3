@@ -11,7 +11,6 @@ def f(x) :
 
 
 if __name__ == '__main__':    
-    nu = NumericalDiff() 
     # x= Variable(np.array([[3.0,2.0,4.0],[1.0,2.0,3.0]]))
     x = Variable(np.array(3.0))
     
@@ -22,8 +21,13 @@ if __name__ == '__main__':
 
     # r = forward_diff(f,x)
     # print(r)
+    
+    # 중앙차분 사용
+    nu = NumericalDiff() 
     sq = Square()
     r = nu.centered_diff(sq,x)
     print(r)
 
+    r2 = nu.forward_diff(sq,x)
+    print(r2)
     
