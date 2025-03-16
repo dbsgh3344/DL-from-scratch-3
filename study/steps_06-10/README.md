@@ -162,4 +162,17 @@ output = Variable(self.as_array(y))
 
 ```
 
+## Step 10
+### 단위 테스트
+구현한 코드들이 기대한 값을 출력하는지 테스트하기 위해 단위 테스트를 이용합니다.  
 
+
+```python
+import unittest
+class SquareTest(unittest.TestCase) :
+    def test_forward(self) :
+        x = Variable(np.array(2.0))
+        result = square(x)
+        expected_result = np.array(4.0)
+        self.assertEqual(result.data,expected_result)
+```

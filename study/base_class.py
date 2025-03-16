@@ -28,13 +28,13 @@ class Variable:
             self.grad = np.ones_like(self.data)
 
 
-        funcs = [self.creator]
+        funcs = [self.creator]        
         while funcs :
-            func = funcs.pop()
+            func = funcs.pop()                      
             x, y = func.input, func.output
             x.grad = func.backward(y.grad)
 
-            if not x.creator:
+            if x.creator:
                 funcs.append(x.creator)
 
 
