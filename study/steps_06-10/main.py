@@ -41,13 +41,13 @@ assert y.creator.input.creator.input.creator.input == x
 
 # 역전파 자동화
 y.grad= np.array(1.0)
-y.backward()
+y.backward_recursion()
 print(x.grad)
 
-x = Variable(np.array(0.5))
-a = square(x)
-b = exp(a)
-c = square(b)
+# x = Variable(np.array(0.5))
+# a = square(x)
+# b = exp(a)
+# c = square(b)
 
 
-print(np.ones_like(np.array(1.0)))
+# print(np.ones_like(np.array(1.0)))
