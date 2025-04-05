@@ -8,6 +8,7 @@
 def __call__(self, inputs:list[Variable]):
     ...
     xs = [x.data for x in inputs]
+    ys = self.forward(xs)
     outputs = [Variable(self.as_array(y)) for y in ys]
     for output in outputs :
             output.set_creator(self)             
@@ -25,7 +26,11 @@ class Add(Function) :
         return (y,)
 ```
 ```python
-xs = [Variable]
+xs = [Variable(np.array(2)), Variable(np.array(3))]
+f= Add()
+ys = f(xs)
+y = ys[0]
+print(y.data)
 
 ```
 
@@ -46,10 +51,14 @@ def __call__(self, *inputs:list[Variable]):
 결과 값은 tuple로 변환합니다.  
 
 ```python
-
 ys = self.forward(*xs)
 if not isinstance(ys, tuple) :
     ys = (ys,)
+```
+```python
+class Add(Function) :
+    def forward(self,x0,x1) :
+        return x0 + x1
 ```
 
 ## Step 13
@@ -89,9 +98,9 @@ class Variable :
 Square클래스도 가변 길이 인수에 맞게 수정합니다.  
 ```python
 def backward(self, gy:np.ndarray):
-        x = self.inputs[0].data
-        gx = 2*x*gy
-        return gx
+    x = self.inputs[0].data
+    gx = 2*x*gy
+    return gx
 ```
 
 ## Step 14

@@ -50,7 +50,7 @@ class Variable:
 
 
         while funcs :
-            print(id(self))
+            # print(id(self))
             func = funcs.pop()                      
             # x, y = func.input, func.output
             # x.grad = func.backward(y.grad)

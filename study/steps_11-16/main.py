@@ -15,8 +15,8 @@ if __name__ == "__main__" :
     # y = ys[0]
     # print(y.data)
     
-    x0 = Variable(np.array(2))
-    x1 = Variable(np.array(3))
+    x0 = Variable(np.array(2.0))
+    x1 = Variable(np.array(3.0))
     y = add(x0,x1)
     print(y.data)
 
