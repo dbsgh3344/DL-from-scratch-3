@@ -1,4 +1,5 @@
 import numpy as np
+from heapq import heappop,heappush
 
 class Variable: 
     def __init__(self, data:np.ndarray): 
@@ -7,8 +8,8 @@ class Variable:
                 raise TypeError('{} is not ndarray type'.format(type(data)))
         self.data = data
         self.grad = None
-        self.creator = None
-        self.generation = 0
+        self.creator:Function = None
+        self.generation = 0        
     
     def clear_grad(self):
         self.grad = None
@@ -31,11 +32,11 @@ class Variable:
             x.backward_recursion()
 
     def backward(self) :
-        def add_func(f:Function) :
-            if f not in seen_set :
-                funcs.append(f)
-                seen_set.add(f)
-                funcs.sort(key=lambda x: x.generation)
+        # def add_func(f:Function) :
+        #     if f not in seen_set :
+        #         funcs.append(f)
+        #         seen_set.add(f)
+        #         funcs.sort(key=lambda x: x.generation)
 
                 
         
@@ -43,15 +44,16 @@ class Variable:
             self.grad = np.ones_like(self.data)
         # funcs = [self.creator]        
         funcs = []
-        seen_set = set()
+        # seen_set = set()
 
-        add_func(self.creator)
-
-
+        # add_func(self.creator)                
+        heappush(funcs, self.creator)        
 
         while funcs :
             # print(id(self))
-            func = funcs.pop()                      
+            # func = funcs.pop()                      
+            func = heappop(funcs)
+            print(func.generation)
             # x, y = func.input, func.output
             # x.grad = func.backward(y.grad)
             gys = [output.grad for output in func.outputs]
@@ -66,7 +68,10 @@ class Variable:
             
                 if x.creator:
                     # funcs.append(x.creator)
-                    add_func(x.creator)
+                    # add_func(x.creator)
+                    heappush(funcs, x.creator)
+                    funcs = list(set(funcs))
+
 
 
 
@@ -101,6 +106,8 @@ class Function:
             return np.array(x)
         return x
 
+    def __lt__(self,item) :
+        return -self.generation < -item.generation
 
 
 
