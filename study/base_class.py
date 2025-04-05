@@ -1,5 +1,7 @@
+import weakref
 import numpy as np
 from heapq import heappop,heappush
+import gc 
 
 class Variable: 
     def __init__(self, data:np.ndarray): 
@@ -56,7 +58,7 @@ class Variable:
             print(func.generation)
             # x, y = func.input, func.output
             # x.grad = func.backward(y.grad)
-            gys = [output.grad for output in func.outputs]
+            gys = [output().grad for output in func.outputs]
             gxs = func.backward(*gys)
             if not isinstance(gxs, tuple) :
                 gxs = (gxs,)
@@ -91,8 +93,7 @@ class Function:
         
 
         self.inputs = inputs
-        self.outputs = outputs
-        # return outputs
+        self.outputs = [weakref.ref(output) for output in outputs]        
         return outputs if len(outputs) > 1 else outputs[0]
     
     def forward(self, xs):
