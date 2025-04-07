@@ -35,7 +35,7 @@ c.a = a # b:2
 a = b = c = None # a:1 , b:1, c:1
 ```
 <br>
-<img src="https://github.com/user-attachments/assets/" width=40%>
+<img src="/Users/song-yunho/code/DL-from-scratch-3/study/steps_17-22/imgs/그림 17-2.png" width=40%>
 <br>
 객체에 None을 대입해도 순환 참조 현상에 의해 메모리가 삭제되지 않습니다.  
 
@@ -324,5 +324,5 @@ class Pow(Function):
 ...
 def pow(x,c) :
     return Pow(c)(x)
-    
+
 ```
