@@ -8,7 +8,7 @@ python의 메모리 관리 두 가지 방식에 대해 설명합니다.
 참조 카운트 증가 조건
 - 대입 연사자를 사용할 떄
 - 함수에 인수로 전달할 때
-- 컨테이너 타입 객체에 추가할 떄
+- 컨테이너 타입 객체에 추가할 떄 (list, tuple .. )
 ```python
 a = obj() # a:1
 b = obj() # b:1
@@ -52,6 +52,9 @@ gc.collect() # GC 수동 호출
 python에서 weakref 모듈을 사용하여 참조 카운팅을 하지 않을 수 있습니다.  
 참조 카운팅 하지 않으면 사용된 객체는 삭제되어 메모리를 유지 할 수 있습니다.  
 이를 dezero 코드에서 순환 참조가 발생하는 구간에 반영합니다.  
+<br>  
+<img src="/Users/song-yunho/code/DL-from-scratch-3/study/steps_17-22/imgs/그림 17-3.png" width=40%>
+<br>
 <!-- 순환 참조 발셍 구간 : Function의 output을 Variable로 받고 Variable backward에서  -->
 
 ```python
