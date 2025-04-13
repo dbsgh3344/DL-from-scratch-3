@@ -1,0 +1,5 @@
+digraph g{
+    1 [label="x", color=red]
+    2 [label="y", color=blue]
+    1 -> 2
+}
