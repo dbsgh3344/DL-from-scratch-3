@@ -28,55 +28,55 @@ if __name__ == '__main__':
     print("step 23: ",y)
     
 
-    # step 24 sphere 함수 테스트
-    x = Variable(np.array(3.0))
-    y = Variable(np.array(4.0))
-    z = sphere(x,y)
-    z.backward()    
-    print("step 24 ", z)
-    print("x.grad: ", x.grad)
-    print("y.grad: ", y.grad)
+    # # step 24 sphere 함수 테스트
+    # x = Variable(np.array(3.0))
+    # y = Variable(np.array(4.0))
+    # z = sphere(x,y)
+    # z.backward()    
+    # print("step 24 ", z)
+    # print("x.grad: ", x.grad)
+    # print("y.grad: ", y.grad)
 
-    # step 24 matyas 함수 테스트
-    x = Variable(np.array(3.0))
-    y = Variable(np.array(4.0))
-    z = matyas(x,y)
-    z.backward()
-    print("step 24 matyas ", z)
-    print("x.grad: ", x.grad)
-    print("y.grad: ", y.grad)
+    # # step 24 matyas 함수 테스트
+    # x = Variable(np.array(3.0))
+    # y = Variable(np.array(4.0))
+    # z = matyas(x,y)
+    # z.backward()
+    # print("step 24 matyas ", z)
+    # print("x.grad: ", x.grad)
+    # print("y.grad: ", y.grad)
 
-    # step 25 gold_stein 함수 테스트
-    x = Variable(np.array(1.0))
-    y = Variable(np.array(1.0))
-    z = gold_stein(x,y)
-    z.backward()
-    print("step 25 ", z)
-    print("x.grad: ", x.grad)
-    print("y.grad: ", y.grad)
+    # # step 25 gold_stein 함수 테스트
+    # x = Variable(np.array(1.0))
+    # y = Variable(np.array(1.0))
+    # z = gold_stein(x,y)
+    # z.backward()
+    # print("step 25 ", z)
+    # print("x.grad: ", x.grad)
+    # print("y.grad: ", y.grad)
 
 
-    # step 26 _dot_var 테스트
-    x = Variable(np.random.rand(2 , 3))
-    x.name = "x"
-    print(_dot_var(x))
-    print(_dot_var(x, verbose=True))
+    # # step 26 _dot_var 테스트
+    # x = Variable(np.random.rand(2 , 3))
+    # x.name = "x"
+    # print(_dot_var(x))
+    # print(_dot_var(x, verbose=True))
 
-    # step 26 _dot_func 테스트
-    x0 = Variable(np.array(2.0))
-    x1 = Variable(np.array(3.0))
-    y = x0 + x1
-    txt = _dot_func(y.creator)
-    print(txt)
+    # # step 26 _dot_func 테스트
+    # x0 = Variable(np.array(2.0))
+    # x1 = Variable(np.array(3.0))
+    # y = x0 + x1
+    # txt = _dot_func(y.creator)
+    # print(txt)
 
-    # step 26 gold_stein 시각화
-    x = Variable(np.array(1.0))
-    y = Variable(np.array(1.0))
-    z = gold_stein(x,y)
-    z.backward()
-    x.name = "x"
-    y.name = "y"
-    z.name = "z"
-    print(os.getcwd())
-    # plot_dot_graph(z, verbose=False, to_file="./study/steps_23-26/gold_stein.png")
-    plot_dot_graph_using_lib(z, verbose=False, to_file="./study/steps_23-26/gold_stein_lib.png")
+    # # step 26 gold_stein 시각화
+    # x = Variable(np.array(1.0))
+    # y = Variable(np.array(1.0))
+    # z = gold_stein(x,y)
+    # z.backward()
+    # x.name = "x"
+    # y.name = "y"
+    # z.name = "z"
+    # print(os.getcwd())
+    # # plot_dot_graph(z, verbose=False, to_file="./study/steps_23-26/gold_stein.png")
+    # plot_dot_graph_using_lib(z, verbose=False, to_file="./study/steps_23-26/gold_stein_lib.png")
