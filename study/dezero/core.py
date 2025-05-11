@@ -2,7 +2,9 @@ import weakref
 import numpy as np
 from heapq import heappop,heappush
 import contextlib
-from core_simple import Function
+# import sys, os    
+# sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
+# from dezero.core_simple import Function
 
 
 def as_array(x):
@@ -185,6 +187,42 @@ class Variable:
 
         return f"Var({p})"
     
+
+class Function: 
+    def __call__(self, *inputs): 
+        # if not isinstance(inputs, Variable) :
+        #     raise TypeError('{} is not Variable'.format(type(inputs)))        
+        inputs = [as_variable(x) for x in inputs]
+        xs = [x.data for x in inputs]
+        ys = self.forward(*xs)
+        if not isinstance(ys, tuple) :
+            ys = (ys,)
+        outputs = [Variable(as_array(y)) for y in ys]
+
+        if Config.enable_backprop:
+            self.generation = max([i.generation for i in inputs])
+            for output in outputs:
+                output.set_creator(self)
+            
+            self.inputs = inputs
+            self.outputs = [weakref.ref(output) for output in outputs]        
+            
+        return outputs if len(outputs) > 1 else outputs[0]
+    
+    def forward(self, xs):
+        raise NotImplementedError()
+    
+    def backward(self, gys):
+        raise NotImplementedError()
+
+    # def as_array(self,x):
+    #     if np.isscalar(x):
+    #         return np.array(x)
+    #     return x
+    
+
+    def __lt__(self,item):
+        return -self.generation < -item.generation
 
 class Square(Function) :
     def forward(self,x) :
