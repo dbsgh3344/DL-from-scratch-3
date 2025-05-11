@@ -7,6 +7,6 @@ from dezero.utils import _dot_var, _dot_func, get_dot_graph, plot_dot_graph, plo
 if is_simple_core:
     from dezero.core_simple import Variable, Function, use_config, no_grad, as_array, as_variable,setup_variable
 else :    
-    from dezero.core import Variable, use_config, no_grad, as_array, as_variable , setup_variable    
+    from dezero.core import Variable,Function, use_config, no_grad, as_array, as_variable , setup_variable    
 
 setup_variable()

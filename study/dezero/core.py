@@ -18,17 +18,6 @@ def as_variable(data):
     return Variable(data)
 
 
-def setup_variable():
-    Variable.__add__ = add
-    Variable.__radd__ = add
-    Variable.__mul__ = mul
-    Variable.__rmul__ = mul
-    Variable.__neg__ = neg
-    Variable.__sub__ = sub
-    Variable.__rsub__ = rsub
-    Variable.__truediv__ = div
-    Variable.__rtruediv__ = rdiv
-    Variable.__pow__ = pow
 
 
 @contextlib.contextmanager
@@ -79,8 +68,6 @@ def rdiv(x0,x1):
     x1 = as_array(x1)
     return Div(x1,x0)
 
-def pow(x,c) :
-    return Pow(c)(x)
 
 
 
@@ -140,22 +127,22 @@ class Variable:
             func = heappop(funcs)            
             gys = [output().grad for output in func.outputs]
             with use_config('enable_backprop',create_graph):
-                gxs = func.backward(*gys)
+                gxs = func.backward(*gys)                
+                if not isinstance(gxs, tuple) :
+                    gxs = (gxs,)
 
-            # gxs = func.backward(*gys)
-            if not isinstance(gxs, tuple) :
-                gxs = (gxs,)
-            for x, gx in zip(func.inputs, gxs) :
-                if x.grad is None :
-                    x.grad = gx
-                else :
-                    x.grad = x.grad + gx
-            
-                if x.creator:
-                    # funcs.append(x.creator)
-                    # add_func(x.creator)
-                    heappush(funcs, x.creator)
-                    funcs = list(set(funcs))
+                    
+                for x, gx in zip(func.inputs, gxs) :
+                    if x.grad is None :
+                        x.grad = gx
+                    else :
+                        x.grad = x.grad + gx
+                
+                    if x.creator:
+                        # funcs.append(x.creator)
+                        # add_func(x.creator)
+                        heappush(funcs, x.creator)
+                        funcs = list(set(funcs))
             
             if not retain_grad:
                 for y in func.outputs:
@@ -281,5 +268,22 @@ class Pow(Function):
         return x ** self.c
     
     def backward(self, gy):
-        x = self.inputs
-        return gy * x ** (self.c-1) * self.c
+        x, = self.inputs
+        c = self.c
+        gx = x ** (c - 1) * c *gy
+        return gx
+
+def pow(x,c) :
+    return Pow(c)(x)
+
+def setup_variable():
+    Variable.__add__ = add
+    Variable.__radd__ = add
+    Variable.__mul__ = mul
+    Variable.__rmul__ = mul
+    Variable.__neg__ = neg
+    Variable.__sub__ = sub
+    Variable.__rsub__ = rsub
+    Variable.__truediv__ = div
+    Variable.__rtruediv__ = rdiv
+    Variable.__pow__ = pow
