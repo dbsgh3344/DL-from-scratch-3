@@ -5,6 +5,7 @@ import numpy as np
 # from dezero import Variable
 from dezero import Variable
 from dezero import functions as F
+from dezero.utils import plot_dot_graph_using_lib
 import matplotlib.pyplot as plt
 
 def f(x):
@@ -57,6 +58,20 @@ def step34_sin_graph(x):
     plt.legend()
     plt.show()
 
+def step35_tanh_graph(x:Variable, iters):
+    y = F.tanh(x)
+    x.name = "x"
+    
+    for i in range(iters):
+        y.backward(create_graph=True)
+        y.name = "y"
+        y = x.grad
+        x.clear_grad()
+
+    y.name = "gx" + str(iters + 1)
+    
+    plot_dot_graph_using_lib(y, verbose=False, to_file="./tanh_graph.png")
+
 
 
 if __name__ == '__main__':
@@ -93,5 +108,36 @@ if __name__ == '__main__':
     # step 34 sin graph
     # x = Variable(np.arange(0, 2*np.pi, 0.1))
     x = Variable(np.linspace(-7, 7, 200))
-    step34_sin_graph(x)
+    # step34_sin_graph(x)
+
+
+    # step 35 tanh 시각화
+    x = Variable(np.array(0.5))
+    # step35_tanh_graph(x, iters=3)
+
+
+    # step 36 double backprop 구현
+    x = Variable(np.array(2.0))
+    y = x**2
+    y.backward(create_graph=True)
+    z = x.grad**3 + y
+    x.clear_grad()
+    z.backward(create_graph=True)
+    print(x.grad)
+
+    
+    x = Variable(np.array([1.0,2.0]))
+
+    def f(x):
+         t = x**2
+         y = np.sum(t)
+         return y
+
+    print(f(x))
+
+
+
+
+    
+
 

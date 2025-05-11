@@ -28,6 +28,20 @@ def cos(x):
     return Cos()(x)
 
 
+class Tanh(Function):
+    def forward(self,x):
+        # y = (np.exp(x) - np.exp(-x)) / (np.exp(x) + np.exp(-x))
+        return np.tanh(x)
+
+    def backward(self, gy):        
+        y = self.outputs[0]() 
+        gx = (1 - y ** 2) * gy
+        return gx
+
+def tanh(x):
+    return Tanh()(x)
+        
+
 
 
 if __name__ == "__main__":

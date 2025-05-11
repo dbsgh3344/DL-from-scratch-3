@@ -113,9 +113,48 @@ for i in range(order):
 ```
 
 
+## Step 35
+35단계에선 tanh 함수를 구현합니다.
+### tanh 함수 구현
+미분 공식에 따라 tanh 함수의 backward를 구현 할 수 있습니다.
 
+```python
+class Tanh(Function):
+    def forward(self,x):        
+        return np.tanh(x)
+
+    def backward(self, gy):        
+        y = self.outputs[0]() 
+        gx = (1 - y ** 2) * gy
+        return gx
+
+def tanh(x):
+    return Tanh()(x)
+```
+
+
+## Step 36
+36 단계에선 double backprop을 테스트합니다.  
+
+### double backprop의 용도
+dezero가 고차 미분을 수행 할 수 있게 되면서 미분이 포함된 식을 다시 미분하는 방법도 가능해졌습니다.  
+따라서 다음과 같은 식도 해결이 가능합니다.  
+$y = x^2$  
+$z = (\frac{dy}{dx})^3 + y  $    
+
+문제: `x = 2.0` 에서 z의 미분  
 
 
 ```python
+x = Variable(np.array(2.0))
+y = x**2
+y.backward(create_graph=True)
+z = x.grad**3 + y
+x.clear_grad()
+z.backward(create_graph=True)
+print(x.grad)
+# Var(100.0)
+
 ```
+
 
