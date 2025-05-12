@@ -7,10 +7,38 @@ from dezero import Variable
 from dezero import functions as F
 from dezero.utils import plot_dot_graph_using_lib
 import matplotlib.pyplot as plt
+from memory_profiler import profile
+
+class IterTest:
+    def __init__(self, x, limit=10):
+        self.x = x
+        self.itr = 0
+        self.limit = limit
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        cnt = 0
+        if self.itr < self.limit:
+            y = f(x)
+            x.clear_grad()
+            y.backward(create_graph=True)
+            gx = x.grad
+            x.clear_grad()
+            gx.backward()
+            gxx = x.grad
+            self.itr += 1
+            
+            return gx.data / gxx.data
+        else:   
+            raise StopIteration
+
+
+
 
 def f(x):
     return x**4 - 2*x**2
-
 
 def newton_method(x, itr=10):
     for i in range(itr):
@@ -23,7 +51,26 @@ def newton_method(x, itr=10):
         gxx = x.grad
         x.data -= gx.data / gxx.data
         yield x.data    
-    
+
+def newton_method3(x, itr=10):
+    it = IterTest(x, itr)
+    return it
+
+def newton_method2(x, itr=10):
+    r = []
+    for i in range(itr):
+        y = f(x)
+        x.clear_grad()
+        y.backward(create_graph=True)
+        gx = x.grad
+        x.clear_grad()
+        gx.backward()
+        gxx = x.grad
+        tmp = gx.data / gxx.data
+        r.append(tmp)
+        # print(x.data)    
+    return r
+
 def sin_hd(x, order):
     for i in range(order):
         gx = x.grad
@@ -81,7 +128,7 @@ if __name__ == '__main__':
     y = f(x)
     print(y)
     y.backward(create_graph=True)
-    print(x.grad)  # 8.0
+    print(x.grad)
     gx = x.grad
     x.clear_grad()
     gx.backward()
@@ -94,6 +141,7 @@ if __name__ == '__main__':
     for i in result:
         print(i)
     
+
 
 
     # step 34 sin 함수의 미분
@@ -113,7 +161,7 @@ if __name__ == '__main__':
 
     # step 35 tanh 시각화
     x = Variable(np.array(0.5))
-    # step35_tanh_graph(x, iters=3)
+    step35_tanh_graph(x, iters=3)
 
 
     # step 36 double backprop 구현
