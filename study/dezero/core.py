@@ -2,6 +2,7 @@ import weakref
 import numpy as np
 from heapq import heappop,heappush
 import contextlib
+import dezero
 # import sys, os    
 # sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 # from dezero.core_simple import Function
@@ -95,6 +96,25 @@ class Variable:
     #     obj.generation = 0
     #     return obj
     
+    # def transpose(self):
+    #     return dezero.functions.transpose(self)
+    
+    def transpose(self, *axes):
+        if len(axes) == 0:
+            axes = None
+        elif len(axes) == 1:
+            if isinstance(axes[0], (tuple, list)) or axes[0] is None:
+                axes = axes[0]
+        return dezero.functions.transpose(self, axes)
+
+    def reshape(self, *shape):
+        # if self.shape == shape:
+        #     return self
+        if len(shape) == 1 and isinstance(shape[0], (list, tuple)):
+            shape = shape[0]
+        return dezero.functions.reshape(self, shape)
+
+
     def clear_grad(self):
         self.grad = None
 
@@ -163,6 +183,10 @@ class Variable:
     @property
     def dtype(self):
         return self.data.dtype
+
+    @property
+    def T(self):
+        return dezero.functions.transpose(self)
 
     def __len__(self):
         return len(self.data)
