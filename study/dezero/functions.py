@@ -1,7 +1,7 @@
 import numpy as np
 import sys, os    
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
-from dezero.core import Function, Variable
+from dezero.core import Function, Variable,as_variable
 
 class Sin(Function):
     def forward(self, x):
@@ -42,6 +42,49 @@ def tanh(x):
     return Tanh()(x)
         
 
+class Reshape(Function):
+    def __init__(self, shape):
+        self.shape = shape
+
+    def forward(self, x):
+        self.x_shape = x.shape
+        y = x.reshape(self.shape)
+        return y
+
+    def backward(self, gy):
+        x = self.inputs        
+        return reshape(gy, self.x_shape)
+
+def reshape(x, shape):
+    if x.shape == shape:
+        return as_variable(x)
+    return Reshape(shape)(x)
+
+
+class Transpose(Function):
+    def forward(self, x):
+        return np.transpose(x)
+    
+    def backward(self, gy):        
+        return transpose(gy)
+        
+def transpose(x):
+    return Transpose()(x)
+
+
+
+class Sum(Function):
+    def forward(self, x):
+        y = np.sum(x)
+        return y
+
+    def backward(self, gy):
+        # gx = np.ones_like(self.inputs[0].data) * gy
+        gx = sum([i for i in self.inputs]) * gy
+        return gx
+
+def sum(x):
+    return Sum()(x)
 
 
 if __name__ == "__main__":
