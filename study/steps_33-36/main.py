@@ -40,6 +40,7 @@ class IterTest:
 def f(x):
     return x**4 - 2*x**2
 
+@profile
 def newton_method(x, itr=10):
     for i in range(itr):
         y = f(x)
@@ -56,6 +57,7 @@ def newton_method3(x, itr=10):
     it = IterTest(x, itr)
     return it
 
+@profile
 def newton_method2(x, itr=10):
     r = []
     for i in range(itr):
@@ -120,6 +122,18 @@ def step35_tanh_graph(x:Variable, iters):
     plot_dot_graph_using_lib(y, verbose=False, to_file="./tanh_graph.png")
 
 
+@profile
+def iter_test(x,iter):
+    iter = newton_method(x, itr=iter)
+    for i in iter:
+        pass
+
+@profile
+def no_iter(x,iter):
+    result = newton_method2(x, itr=iter)
+    for i in result:
+        pass
+
 
 if __name__ == '__main__':
     
@@ -135,53 +149,54 @@ if __name__ == '__main__':
     print(x.grad)
 
     # step 33 뉴턴 방법을 활용한 최적화
-    itr = 10
+    itr = 10000
     x = Variable(np.array(2.0))
-    result = newton_method(x, itr=itr)
-    for i in result:
-        print(i)
-    
+    # result = newton_method(x, itr=itr)
+    # for i in result:
+    #     print(i)
+    iter_test(x, itr)
+    no_iter(x, itr)
 
 
 
-    # step 34 sin 함수의 미분
-    x = Variable(np.array(1.0))
-    y = F.sin(x)
-    y.backward(create_graph=True)
+    # # step 34 sin 함수의 미분
+    # x = Variable(np.array(1.0))
+    # y = F.sin(x)
+    # y.backward(create_graph=True)
 
-    print(x.grad, np.cos(1))
-    sin_hd(x, order=3)
-
-    
-    # step 34 sin graph
-    # x = Variable(np.arange(0, 2*np.pi, 0.1))
-    x = Variable(np.linspace(-7, 7, 200))
-    # step34_sin_graph(x)
-
-
-    # step 35 tanh 시각화
-    x = Variable(np.array(0.5))
-    step35_tanh_graph(x, iters=3)
-
-
-    # step 36 double backprop 구현
-    x = Variable(np.array(2.0))
-    y = x**2
-    y.backward(create_graph=True)
-    z = x.grad**3 + y
-    x.clear_grad()
-    z.backward(create_graph=True)
-    print(x.grad)
+    # print(x.grad, np.cos(1))
+    # sin_hd(x, order=3)
 
     
-    x = Variable(np.array([1.0,2.0]))
+    # # step 34 sin graph
+    # # x = Variable(np.arange(0, 2*np.pi, 0.1))
+    # x = Variable(np.linspace(-7, 7, 200))
+    # # step34_sin_graph(x)
 
-    def f(x):
-         t = x**2
-         y = np.sum(t)
-         return y
 
-    print(f(x))
+    # # step 35 tanh 시각화
+    # x = Variable(np.array(0.5))
+    # step35_tanh_graph(x, iters=3)
+
+
+    # # step 36 double backprop 구현
+    # x = Variable(np.array(2.0))
+    # y = x**2
+    # y.backward(create_graph=True)
+    # z = x.grad**3 + y
+    # x.clear_grad()
+    # z.backward(create_graph=True)
+    # print(x.grad)
+
+    
+    # x = Variable(np.array([1.0,2.0]))
+
+    # def f(x):
+    #      t = x**2
+    #      y = np.sum(t)
+    #      return y
+
+    # print(f(x))
 
 
 
