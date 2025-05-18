@@ -6,17 +6,13 @@ from dezero import Variable
 from dezero import functions as F
 
 
-
-
-
-if __name__ == "__main__":
+def step_37():
     # 37.1 텐서 계산
     np_array = np.array([[1,2,3],[3,4,5]])
     x = Variable(np_array)
     y= F.sin(x)
     print(y)
-
-
+    
     # 37.2 
     np_array = np.array([[1,2,3],[3,4,5]])
     np_array2 = np.array([[1,2,3],[3,4,5]])
@@ -33,8 +29,9 @@ if __name__ == "__main__":
     print(t.grad)
     print(c.grad)
     print(x.grad)
+    
 
-
+def step_38():
     # 38.1
     # print(np.transpose(np.array([[1,2,3],[3,4,5]])))
     # print(np.reshape(np.array([[1,2,3],[3,4,5]]), (3,2)))
@@ -72,5 +69,48 @@ if __name__ == "__main__":
     x = Variable(np.random.rand(1,2,3,4))
     x.T
     print(x.T.shape) # (4,3,2,1)
+
+
+def step_39():
+    # 39.3
+    x = np.array([[1,2,3],[3,4,5],[5,6,7]])
+    # y = np.sum(x, axis=1)
+    y = np.sum(x, axis=(1,0))
+    print(y)
+
+    x = Variable(np.array([[1,2,3],[3,4,5],[5,6,7]]))
+    y = F.sum(x, axis=1)
+    print(y)
+    
+    x = Variable(np.array([[1,2,3],[3,4,5],[5,6,7]]))
+    print(x.shape)
+    y = x.sum(keepdims=True)
+    print(y.shape)
+
+
+def step_40():
+    # 40.3 브로드캐스트 연산 테스트
+    x0 = Variable(np.array([[1,2,3],[3,4,5]])) # (2,3)
+    x1 = Variable(np.array([[1,2,3]])) # (1,3)
+    y = x0 + x1
+    print(y) # (2,3)
+
+
+
+
+if __name__ == "__main__":
+    # step_37()
+    # step_38()
+    # step_39()
+    step_40()
+
+
+    
+
+
     
     
+    
+    
+    
+

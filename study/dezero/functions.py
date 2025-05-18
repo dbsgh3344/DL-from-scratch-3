@@ -1,7 +1,10 @@
+from typing import Optional
 import numpy as np
 import sys, os    
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 from dezero.core import Function, Variable,as_variable
+from dezero import utils
+
 
 class Sin(Function):
     def forward(self, x):
@@ -74,17 +77,62 @@ def transpose(x):
 
 
 class Sum(Function):
+    def __init__(self,axis, keepdims):
+        self.axis = axis
+        self.keepdims = keepdims
+        
+
     def forward(self, x):
-        y = np.sum(x)
+        self.x_shape = x.shape
+        y = x.sum(axis=self.axis,keepdims=self.keepdims)
+        return y
+
+    def backward(self, gy):        
+        # gx = sum([i for i in self.inputs]) * gy
+        gy = utils.reshape_sum_backward(gy, self.x_shape, self.axis, self.keepdims)
+        gx = broadcast_to(gy, self.x_shape)
+        return gx
+
+def sum(x,axis,keepdims=False):
+    return Sum(axis,keepdims)(x)
+
+class BroadcastTo(Function):
+    def __init__(self, shape):
+        self.shape = shape
+
+    def forward(self, x):
+        x.x_shape = x.shape
+        y = np.broadcast_to(x, self.shape)
         return y
 
     def backward(self, gy):
-        # gx = np.ones_like(self.inputs[0].data) * gy
-        gx = sum([i for i in self.inputs]) * gy
+        gx = sum_to(gy, self.x_shape)
         return gx
 
-def sum(x):
-    return Sum()(x)
+def broadcast_to(x, shape):
+    if x.shape == shape:
+        return as_variable(x)
+    return BroadcastTo(shape)(x)
+
+class SumTo:
+    def __init__(self,shape):
+        self.shape = shape
+
+    def forward(self, x):
+        self.x_shape = x.shape
+        y = utils.sum_to(x, axis=self.shape, keepdims=True)
+        return y
+
+    def backward(self, gy):        
+        gx = broadcast_to(gy, self.x_shape)
+        return gx    
+
+def sum_to(x, shape):
+    if x.shape == shape:
+        return as_variable(x)
+    return SumTo(shape)(x)
+        
+
 
 
 if __name__ == "__main__":

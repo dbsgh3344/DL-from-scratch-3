@@ -107,6 +107,86 @@ def reshape(self, *shape):
 
 
 
+## Step 39
+39단계에선 텐서 연산이 가능한 sum 함수를 구현합니다.  
+역전파 단계에서 입력값의 형상을 복원하기 위해 broadcast_to 함수를 사용합니다.  
+sum 의 기준을 축에 따라 변경하는 axis, 기존 차원을 유지하는 keepdims도 구현합니다.  
+
+```python
+class Sum(Function):
+    def __init__(self,axis, keepdims):
+        self.axis = axis
+        self.keepdims = keepdims
+        
+
+    def forward(self, x):
+        self.x_shape = x.shape
+        y = x.sum(axis=self.axis,keepdims=self.keepdims)
+        return y
+
+    def backward(self, gy):        
+        # gx = sum([i for i in self.inputs]) * gy
+        gy = utils.reshape_sum_backward(gy, self.x_shape, self.axis, self.keepdims)
+        gx = broadcast_to(gy, self.x_shape)
+        return gx
+
+def sum(x,axis,keepdims=False):
+    return Sum(axis,keepdims)(x)
+
+```
+
+## Step 40
+40단계에선 broadcast를 구현합니다.  
+
+
+### 40.2 broadcast, sum_to 구현
+브로드캐스트는 현재 형상을 복사하여 형상을 늘릴 때 사용합니다.  
+
+
+
+```python
+class BroadcastTo(Function):
+    def __init__(self, shape):
+        self.shape = shape
+
+    def forward(self, x):
+        x.x_shape = x.shape
+        y = np.broadcast_to(x, self.shape)
+        return y
+
+    def backward(self, gy):
+        gx = sum_to(gy, self.x_shape)
+        return gx
+
+def broadcast_to(x, shape):
+    if x.shape == shape:
+        return as_variable(x)
+    return BroadcastTo(shape)(x)
+```
+
+
+```python
+class SumTo:
+    def __init__(self,shape):
+        self.shape = shape
+
+    def forward(self, x):
+        self.x_shape = x.shape
+        y = utils.sum_to(x, axis=self.shape, keepdims=True)
+        return y
+
+    def backward(self, gy):        
+        gx = broadcast_to(gy, self.x_shape)
+        return gx    
+
+def sum_to(x, shape):
+    if x.shape == shape:
+        return as_variable(x)
+    return SumTo(shape)(x)
+```
+
+
+
 
 ```python
 ```
