@@ -20,7 +20,7 @@ def step_37():
     c = Variable(np_array2)
     t = x + c
     print(t)
-    y = F.sum(t)
+    y = F.sum(t, axis=1, keepdims=False)
     # y = F.sin(t)
     print(y)
     # print(np.sum(np.array([[1,2,3],[3,4,5]]) * 2))
@@ -99,18 +99,8 @@ def step_40():
 
 
 if __name__ == "__main__":
-    # step_37()
+    step_37()
     # step_38()
     # step_39()
-    step_40()
-
-
-    
-
-
-    
-    
-    
-    
-    
+    # step_40()
 
