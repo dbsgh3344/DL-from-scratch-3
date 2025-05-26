@@ -8,8 +8,8 @@ import dezero
 # from dezero.core_simple import Function
 
 
-def as_array(x):
-    if np.isscalar(x):
+def as_array(x):    
+    if np.isscalar(x):        
         return np.array(x)
     return x
 
@@ -49,6 +49,7 @@ def add(x0,x1) :
     return f(x0,x1)
 
 def mul(x0,x1) :
+    x1 = as_array(x1)
     f = Mul()        
     return f(x0,x1)
 
@@ -63,11 +64,12 @@ def rsub(x0,x1):
     return Sub()(x1,x0)
 
 def div(x0,x1):
+    x1 = as_array(x1)
     return Div()(x0,x1)
 
 def rdiv(x0,x1):
     x1 = as_array(x1)
-    return Div(x1,x0)
+    return Div()(x1,x0)
 
 
 
@@ -78,7 +80,7 @@ class Config:
 class Variable:         
     # __array__priority__ = 200
     def __init__(self, data:np.ndarray,name:str = None): 
-        if data is None:
+        if data is not None:
             if not isinstance(data, np.ndarray) :
                 raise TypeError('{} is not ndarray type'.format(type(data)))
         # super()
@@ -201,6 +203,10 @@ class Variable:
 
         return f"Var({p})"
     
+class Parameter(Variable):
+    pass
+
+
 
 class Function: 
     def __call__(self, *inputs): 
@@ -237,6 +243,11 @@ class Function:
 
     def __lt__(self,item):
         return -self.generation < -item.generation
+
+
+
+
+
 
 class Square(Function) :
     def forward(self,x) :
