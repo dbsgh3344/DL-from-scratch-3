@@ -25,8 +25,8 @@ def step_42():
         return y
 
     np.random.seed(0)
-    x = np.random.rand(10,1)
-    y = 5 + 2* x + np.random.rand(10,1)
+    x = np.random.randn(100,1)
+    y = 5 + 2* x + np.random.randn(100,1)
     x, y = Variable(x), Variable(y)
 
     W = Variable(np.zeros((1,1)))
@@ -145,8 +145,8 @@ if __name__ == "__main__":
     # step_41()
 
     # step 42 linear regression
-    # step_42()
+    step_42()
 
     # 신경망 구현
     # step_43()
-    step_44()
+    # step_44()

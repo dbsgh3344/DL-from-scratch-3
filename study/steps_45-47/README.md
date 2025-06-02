@@ -133,8 +133,65 @@ class MomentumSGD(Optimizer):
 ```
 
 ## Step 47
+multi class 분류를 위해 softmax 활성화 함수 , cross entropy 오차함수를 구현합니다.
 
 ### 47.1
+get items 함수를 추가합니다.
+
+```python
+class GetItem(Function):
+    def __init__(self,slices):
+        self.slices = slices
+
+    
+    def forward(self, x):
+        y = x[self.slices]
+        return y
+
+    def backward(self, gy):
+        x, = self.inputs
+        f = GetItemGrad(self.slices,x.shape)
+
+        return f(gy)
+        
+def get_item(x, slices):
+    return GetItem(slices)(x)
+```
+
+### 47.2
+소프트맥스 함수를 구현합니다. 1d를 구현해보고 고차원을 커버하는 함수도 구현해봅니다.  
+
+```python
+def softmax1d(x):
+    x = F.as_variable(x)
+    y = F.exp(x)
+    sum_y = F.sum(y)    
+    return y / sum_y
+
+def softmax_simple(x, axis=1):
+    x = as_variable(x)
+    y = exp(x)
+    sum_y = sum(y, axis=axis, keepdims=True)
+    return y / sum_y
+```
+
+### 47.3
+크로스 엔트로피 오차함수를 구현합니다.  
+원핫 벡터의 형태에서는 원소 하나만 1의 값을 갖기 때문에 1의 값을 갖는 번호만으로 크로스 엔트로피를 구현 할 수 있습니다.  
+소프트맥스와 크로스 엔트로피를 한번에 수행하는 함수를 구현합니다.  
+
+```python
+def softmax_cross_entropy_simple(x, t):
+    x, t = as_variable(x), as_variable(t)
+    N = x.shape[0]
+
+    p = softmax_simple(x)
+    p = clip(p, 1e-15 ,1.0)
+    log_p = log(p)
+    tlog_p = log_p[np.arange(N),t.data]
+    y = -1 * sum(tlog_p) / N
+    return y
+```
 
 
 ```python
