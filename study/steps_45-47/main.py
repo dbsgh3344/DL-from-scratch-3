@@ -150,13 +150,13 @@ def step_47_3():
 
 
 if __name__ == "__main__":
-    # step_45()
+    step_45()
     # step_45_2()
     # step_45_3()
     # step_45_4()
-    # step_46_2()
+    step_46_2()
     # step_47_2()
-    step_47_3()
+    # step_47_3()
     
 
 
