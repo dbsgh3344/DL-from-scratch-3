@@ -11,6 +11,8 @@ numpy = "^2.2.3"
 graphviz = "^0.20.3"
 matplotlib = "^3.10.3"
 memory-profiler = "^0.61.0"
+torch = "^2.7.0"
+torchvision = "^0.22.0"
 
 
 [build-system]

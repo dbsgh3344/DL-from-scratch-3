@@ -299,6 +299,7 @@ class Sub(Function):
 
 class Div(Function):
     def forward(self, x0,x1):
+        # print(x0,x1)
         return x0/x1
     def backward(self, gy):
         x0,x1 = self.inputs
